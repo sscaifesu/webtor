@@ -1,0 +1,25 @@
+@import '@mdi/font/css/materialdesignicons.css';
+
+:root {
+  --terminal-bg-color: #000;
+  --terminal-text-color: #fff;
+}
+
+.dark {
+  --terminal-bg-color: #000;
+  --terminal-text-color: #fff;
+}
+
+body {
+  @apply bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.dark input,
+.dark select {
+  @apply bg-gray-700 text-gray-100 border-gray-600;
+}
+
+.dark button {
+  @apply bg-gray-600 text-gray-100 hover:bg-gray-700;
+}
