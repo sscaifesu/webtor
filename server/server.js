@@ -24,47 +24,59 @@ app.use((err, req, res, next) => {
 });
 
 wss.on('connection', (ws) => {
+  console.log('New WebSocket connection established');
   let sshClient;
 
   ws.on('message', (message) => {
     const data = JSON.parse(message);
-    
+    console.log('Received message:', data);
+
     if (data.type === 'connect') {
-      if (sshClient) {
-        sshClient.end();
+      console.log('Client attempting to connect with config:', data);
+
+      // 验证连接配置
+      if (!data.host || !data.port || !data.username || !data.password) {
+        console.error('Invalid connection configuration:', data);
+        ws.send(JSON.stringify({ type: 'error', message: '连接配置无效' }));
+        return;
       }
 
       sshClient = new Client();
-      
+
       sshClient.on('ready', () => {
         ws.send(JSON.stringify({ type: 'info', message: '成功连接到服务器' }));
         sshClient.shell((err, stream) => {
           if (err) {
+            console.error('Error creating shell:', err);
             ws.send(JSON.stringify({ type: 'error', message: '无法创建 Shell：' + err.message }));
             return;
           }
-          
+
+          console.log('SSH shell created successfully');
+
           stream.on('data', (data) => {
+            console.log('Sending data to client:', data.toString());
             ws.send(JSON.stringify({ type: 'data', data: data.toString() }));
           });
-          
-          ws.on('message', (message) => {
-            const data = JSON.parse(message);
-            if (data.type === 'command') {
-              stream.write(data.command);
-            }
-          });
-          
+
           stream.on('close', () => {
             ws.send(JSON.stringify({ type: 'info', message: 'Shell 会话已关闭' }));
           });
+
+          // 处理客户端发送的命令
+          ws.on('message', (cmdMessage) => {
+            const cmdData = JSON.parse(cmdMessage);
+            if (cmdData.type === 'command') {
+              stream.write(cmdData.command);
+            }
+          });
         });
       });
-      
+
       sshClient.on('error', (err) => {
         ws.send(JSON.stringify({ type: 'error', message: '连接错误：' + err.message }));
       });
-      
+
       sshClient.connect({
         host: data.host,
         port: data.port,
@@ -75,10 +87,10 @@ wss.on('connection', (ws) => {
   });
 
   ws.on('close', () => {
+    console.log('WebSocket connection closed');
     if (sshClient) {
       sshClient.end();
     }
-    console.log('WebSocket 连接已关闭');
   });
 });
 
