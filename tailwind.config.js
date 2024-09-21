@@ -3,9 +3,13 @@ module.exports = {
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
-  darkMode: 'class', // 确保这行存在
+  darkMode: 'class',
   theme: {
-    extend: {},
+    extend: {
+      backgroundColor: {
+        'dark': '#1a202c', // 添加一个深色背景色
+      },
+    },
   },
   plugins: [],
 }

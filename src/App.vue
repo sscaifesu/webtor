@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-4 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 relative min-h-screen flex flex-col">
+  <div class="container mx-auto px-4 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 relative min-h-screen flex flex-col">
     <button @click="toggleTheme" class="absolute top-2.5 right-2.5 p-2 rounded-full transition-colors duration-200">
       <font-awesome-icon :icon="isDarkMode ? 'sun' : 'moon'" class="text-xl text-gray-600 dark:text-gray-400" />
     </button>

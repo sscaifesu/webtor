@@ -7,11 +7,6 @@
   --terminal-text-color: #fff;
 }
 
-.dark {
-  --terminal-bg-color: #000;
-  --terminal-text-color: #fff;
-}
-
 body {
   @apply bg-gray-100 text-gray-900 transition-colors duration-200;
 }
@@ -25,11 +20,19 @@ body {
   @apply bg-gray-700 text-gray-100 border-gray-600;
 }
 
-/* 移除所有按钮的背景色和悬停效果 */
 button {
   @apply bg-transparent;
 }
 
 .dark button {
   @apply text-gray-100;
+}
+
+/* 添加以下样式来确保整个应用在暗模式下有正确的背景色 */
+.dark .container {
+  @apply bg-gray-900;
+}
+
+.dark .bg-white {
+  @apply bg-gray-800;
 }
